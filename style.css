@@ -1,0 +1,61 @@
+* {
+  box-sizing: border-box;
+}
+
+#red_container_div {
+  position: relative;
+  display: inline-block;
+}
+
+#smaller_red_container_div {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  padding: 20px;
+}
+
+#timer {
+  background-color: red;
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+#prhw {
+  position: relative;
+  height: 30px;
+  width: 100%;
+}
+
+#byhw {
+  background-color: yellow;
+  height: 30px;
+  width: 100%;
+}
+
+#enemyHealth {
+  position: absolute;
+  background: blue;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+#playerHealth {
+  position: absolute;
+  background: blue;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+#phwdj {
+  position: relative;
+  height: 30px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
