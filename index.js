@@ -26,6 +26,7 @@ class Sprite {
     };
     this.color = color;
     this.isAttacking;
+    this.health = 100;
   }
 
   draw() {
@@ -33,15 +34,15 @@ class Sprite {
     ctx.fillRect(this.postion.x, this.postion.y, this.width, this.height);
 
     // attack box
-     if (this.isAttacking) {
-    ctx.fillStyle = 'white';
-    ctx.fillRect(
-      this.attackBox.postion.x,
-      this.attackBox.postion.y,
-      this.attackBox.width,
-      this.attackBox.height
-    );
-     }
+    if (this.isAttacking) {
+      ctx.fillStyle = 'white';
+      ctx.fillRect(
+        this.attackBox.postion.x,
+        this.attackBox.postion.y,
+        this.attackBox.width,
+        this.attackBox.height
+      );
+    }
   }
 
   update() {
@@ -132,12 +133,17 @@ function animate() {
     player.isAttacking
   ) {
     player.isAttacking = false;
+    enemy.health -= 20;
+    enemyHealth.style.width = enemy.health + '%';
   }
+
   if (
     rectangularCollision({ rectangle1: enemy, rectangle2: player }) &&
     enemy.isAttacking
   ) {
     enemy.isAttacking = false;
+    player.health -= 20;
+    playerHealth.style.width = player.health + '%';
   }
 }
 
