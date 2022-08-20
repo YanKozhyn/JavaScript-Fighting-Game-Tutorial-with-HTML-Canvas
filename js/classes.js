@@ -1,97 +1,114 @@
 class Sprite {
-  constructor({ postion, imageSrc, scale = 1, maxFrame = 1 }) {
-    this.postion = postion;
-    this.width = 50;
-    this.height = 150;
-    this.image = new Image();
-    this.image.src = imageSrc;
-    this.scale = scale;
-    this.maxFrame = maxFrame;
-    this.frameX = 0;
-    this.frameY = 0;
-    this.framesElapsed = 0;
-    this.framesHold = 15;
+  constructor({
+    position,
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = { x: 0, y: 0 }
+  }) {
+    this.position = position
+    this.width = 50
+    this.height = 150
+    this.image = new Image()
+    this.image.src = imageSrc
+    this.scale = scale
+    this.framesMax = framesMax
+    this.framesCurrent = 0
+    this.framesElapsed = 0
+    this.framesHold = 15
+    this.offset = offset
   }
+
   draw() {
     ctx.drawImage(
       this.image,
-      this.frameX * (this.image.width / this.maxFrame),
-      this.frameY,
-      this.image.width / this.maxFrame - 1,
+      this.framesCurrent * (this.image.width / this.framesMax),
+      0,
+      this.image.width / this.framesMax - 1,
       this.image.height,
-      this.postion.x,
-      this.postion.y,
-      (this.image.width / this.maxFrame) * this.scale,
+      this.position.x - this.offset.x,
+      this.position.y - this.offset.y,
+      (this.image.width / this.framesMax) * this.scale,
       this.image.height * this.scale
-    );
+    )
   }
-  update() {
-    this.draw();
-    this.framesElapsed++;
+
+  animateFrames() {
+    this.framesElapsed++
 
     if (this.framesElapsed % this.framesHold === 0) {
-      if (this.frameX < this.maxFrame - 1) {
-        this.frameX++;
+      if (this.framesCurrent < this.framesMax - 1) {
+        this.framesCurrent++
       } else {
-        this.frameX = 0;
+        this.framesCurrent = 0
       }
     }
   }
+
+  update() {
+    this.draw()
+    this.animateFrames()
+  }
 }
 
-class Fighter {
-  constructor({ postion, velocity, color = 'red', offset }) {
-    this.postion = postion;
-    this.velocity = velocity;
-    this.width = 50;
-    this.height = 150;
-    this.lastKey;
+class Fighter extends Sprite {
+  constructor({
+    position,
+    velocity,
+    color = 'red',
+    imageSrc,
+    scale = 1,
+    framesMax = 1,
+    offset = { x: 0, y: 0 }
+  }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      framesMax,
+      offset
+    })
+
+    this.velocity = velocity
+    this.width = 50
+    this.height = 150
+    this.lastKey
     this.attackBox = {
-      postion: {
-        x: this.postion.x,
-        y: this.postion.y,
+      position: {
+        x: this.position.x,
+        y: this.position.y
       },
       offset,
       width: 100,
-      height: 50,
-    };
-    this.color = color;
-    this.isAttacking;
-    this.health = 100;
-  }
-
-  draw() {
-    ctx.fillStyle = this.color;
-    ctx.fillRect(this.postion.x, this.postion.y, this.width, this.height);
-
-    // attack box
-    if (this.isAttacking) {
-      ctx.fillStyle = 'white';
-      ctx.fillRect(
-        this.attackBox.postion.x,
-        this.attackBox.postion.y,
-        this.attackBox.width,
-        this.attackBox.height
-      );
+      height: 50
     }
+    this.color = color
+    this.isAttacking
+    this.health = 100
+    this.framesCurrent = 0
+    this.framesElapsed = 0
+    this.framesHold = 5
   }
 
   update() {
-    this.draw();
-    this.attackBox.postion.x = this.postion.x + this.attackBox.offset.x;
-    this.attackBox.postion.y = this.postion.y;
-    this.postion.x += this.velocity.x;
-    this.postion.y += this.velocity.y;
+    this.draw()
+    this.animateFrames()
 
-    if (this.postion.y + this.height + this.velocity.y >= canvas.height - 96) {
-      this.velocity.y = 0;
-    } else this.velocity.y += gravity;
+    this.attackBox.position.x = this.position.x + this.attackBox.offset.x
+    this.attackBox.position.y = this.position.y
+
+    this.position.x += this.velocity.x
+    this.position.y += this.velocity.y
+
+    if (this.position.y + this.height + this.velocity.y >= canvas.height - 96) {
+      this.velocity.y = 0
+    } else this.velocity.y += gravity
   }
 
   attack() {
-    this.isAttacking = true;
+    this.isAttacking = true
     setTimeout(() => {
-      this.isAttacking = false;
-    }, 100);
+      this.isAttacking = false
+    }, 100)
   }
 }

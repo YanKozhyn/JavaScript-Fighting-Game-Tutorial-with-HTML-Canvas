@@ -9,49 +9,42 @@ ctx.fillRect(0, 0, canvas.width, canvas.height);
 const gravity = 0.7;
 
 const background = new Sprite({
-  postion: {
-    x: 0,
-    y: 0,
-  },
-  imageSrc: './assets/background.png'
+  position: { x: 0, y: 0 },
+  imageSrc: './img/background.png',
 });
 
 const shop = new Sprite({
-  postion: {
-    x: 620,
-    y: 128,
-  },
-  imageSrc: './assets/shop.png',
+  position: { x: 630, y: 128 },
+  imageSrc: './img/shop.png',
   scale: 2.75,
-  maxFrame: 6
+  framesMax: 6,
 });
 
 const player = new Fighter({
-  postion: { x: 0, y: 0 },
+  position: { x: 0, y: 0 },
   velocity: { x: 0, y: 0 },
   offset: { x: 0, y: 0 },
+  imageSrc: './img/samuraiMack/Idle.png',
+  framesMax: 8,
+  scale: 2.5,
+  offset: {
+    x: 215,
+    y: 157,
+  },
 });
 
 const enemy = new Fighter({
-  postion: { x: 400, y: 100 },
+  position: { x: 400, y: 100 },
   velocity: { x: 0, y: 0 },
   color: 'blue',
   offset: { x: -50, y: 0 },
 });
 
 const keys = {
-  a: {
-    pressed: false,
-  },
-  d: {
-    pressed: false,
-  },
-  ArrowRight: {
-    pressed: false,
-  },
-  ArrowLeft: {
-    pressed: false,
-  },
+  a: { pressed: false },
+  d: { pressed: false },
+  ArrowRight: { pressed: false },
+  ArrowLeft: { pressed: false },
 };
 
 decreaseTimer();
@@ -63,25 +56,26 @@ function animate() {
   background.update();
   shop.update();
   player.update();
-  enemy.update();
+  // enemy.update()
+
+  player.velocity.x = 0;
+  enemy.velocity.x = 0;
 
   // player movement
-  player.velocity.x = 0;
   if (keys.a.pressed && player.lastKey === 'a') {
-    player.velocity.x = -2.5;
+    player.velocity.x = -5;
   } else if (keys.d.pressed && player.lastKey === 'd') {
-    player.velocity.x = 2.5;
+    player.velocity.x = 5;
   }
 
-  //enemy movement
-  enemy.velocity.x = 0;
+  // Enemy movement
   if (keys.ArrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
-    enemy.velocity.x = -2.5;
+    enemy.velocity.x = -5;
   } else if (keys.ArrowRight.pressed && enemy.lastKey === 'ArrowRight') {
-    enemy.velocity.x = 2.5;
+    enemy.velocity.x = 5;
   }
 
-  //detect for collision
+  // detect for collision
   if (
     rectangularCollision({ rectangle1: player, rectangle2: enemy }) &&
     player.isAttacking
@@ -123,12 +117,12 @@ window.addEventListener('keydown', (event) => {
       if (player.velocity.y === 0) {
         player.velocity.y = -20;
       }
+      
       break;
     case ' ':
       player.attack();
       break;
-
-    //enemy keys
+    // enemy keys
     case 'ArrowRight':
       keys.ArrowRight.pressed = true;
       enemy.lastKey = 'ArrowRight';
@@ -141,6 +135,7 @@ window.addEventListener('keydown', (event) => {
       if (enemy.velocity.y === 0) {
         enemy.velocity.y = -20;
       }
+      break;
     case 'ArrowDown':
       enemy.isAttacking = true;
       break;
@@ -158,7 +153,7 @@ window.addEventListener('keyup', (event) => {
       break;
   }
 
-  //enemy keys
+  // enemy keys
   switch (event.key) {
     case 'ArrowRight':
       keys.ArrowRight.pressed = false;
