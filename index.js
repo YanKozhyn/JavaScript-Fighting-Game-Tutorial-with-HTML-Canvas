@@ -49,6 +49,11 @@ const player = new Fighter({
       imageSrc: './img/samuraiMack/Attack1.png',
       framesMax: 6,
     },
+    takeHit: {
+      imageSrc: './img/samuraiMack/Take Hit - white silhouette.png',
+      framesMax: 4,
+    },
+
   },
   attackBox: {
     offset: {
@@ -90,6 +95,10 @@ const enemy = new Fighter({
       imageSrc: './img/kenji/Attack1.png',
       framesMax: 4,
     },
+    takeHit: {
+      imageSrc: './img/kenji/Take hit.png',
+      framesMax: 3
+    }
   },
   attackBox: {
     offset: {
@@ -158,14 +167,14 @@ function animate() {
     enemy.switchSprite('fall');
   }
 
-  // detect for collision
+  // detect for collision & enemy gets hit 
   if (
     rectangularCollision({ rectangle1: player, rectangle2: enemy }) &&
     player.isAttacking &&
     player.framesCurrent === 4
   ) {
+    enemy.takeHit()
     player.isAttacking = false;
-    enemy.health -= 20;
     enemyHealth.style.width = enemy.health + '%';
   }
 
@@ -174,13 +183,15 @@ function animate() {
     player.isAttacking = false;
   }
 
+  // player gets hit 
+
   if (
     rectangularCollision({ rectangle1: enemy, rectangle2: player }) &&
     enemy.isAttacking &&
     enemy.framesCurrent === 2
   ) {
+    player.takeHit();
     enemy.isAttacking = false;
-    player.health -= 20;
     playerHealth.style.width = player.health + '%';
   }
 
